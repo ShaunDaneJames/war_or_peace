@@ -1,6 +1,7 @@
 class Turn
   attr_reader :player1,
-              :player2
+              :player2,
+              :spoils_of_war
 
   def initialize(player1, player2)
     @player1 = player1
@@ -8,7 +9,19 @@ class Turn
     @spoils_of_war = []
   end
 
-  def spoils_of_war
-    @spoils_of_war
+  def type
+    if @player1.deck.rank_of_card_at(0) !=
+      @player2.deck.rank_of_card_at(0)
+      turn = :basic
+    elsif @player1.deck.rank_of_card_at(0) ==
+      @player2.deck.rank_of_card_at(0)
+      turn = :war
+    elsif (@player1.deck.rank_of_card_at(0) ==
+      @player2.deck.rank_of_card_at(0)) &&
+      (@player1.deck.rank_of_card_at(2) ==
+      @player2.deck.rank_of_card_at(2))
+      turn = :mutually_assured_destruction
+    end
   end
+
 end
