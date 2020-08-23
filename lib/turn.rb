@@ -31,9 +31,9 @@ class Turn
     if type == :mutually_assured_destruction
       "No Winner"
     elsif type == :basic
-      @players.max_by { |player| player.deck.rank_of_card_at(0) }
+      @winner = @players.max_by { |player| player.deck.rank_of_card_at(0) }
     elsif type == :war
-      @players.max_by { |player| player.deck.rank_of_card_at(2) }
+      @winner = @players.max_by { |player| player.deck.rank_of_card_at(2) }
     end
   end
 
@@ -41,9 +41,9 @@ class Turn
     if type == :mutually_assured_destruction
       @players.map { |player| 3.times {player.deck.remove_card}}
     elsif type == :basic
-      @players.each { |player| @spoils_of_war << player.deck.cards.shift}
+      @players.each { |player| @spoils_of_war << player.deck.remove_card}
     elsif type == :war
-      3.times {@players.each { |player| @spoils_of_war << player.deck.cards.shift}}
+      3.times {@players.each { |player| @spoils_of_war << player.deck.remove_card}}
     end
   end
 

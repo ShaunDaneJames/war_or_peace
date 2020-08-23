@@ -4,7 +4,7 @@ class Game
 
   def initialize
     @starting_deck = create_starting_deck
-    @turn_count = turn_count
+    @turn_count = 0
     @player1 = Player.new("Calvin", Deck.new([]))
     @player2 = Player.new("Hobbes", Deck.new([]))
     @turn = Turn.new(@player1, @player2)
@@ -91,26 +91,32 @@ class Game
   end
 
   def run
-    @turn_count = 0
-    until (@player1.has_lost? || @player2.has_lost?)
-       || @turn_count == 10000
-      @turn.pile_cards
-      @turn.award_spoils(@turn.winner)
-      puts "Turn #{@turn_count}: #{@turn.type}"
+    until @player1.has_lost? || @player2.has_lost? || @turn_count == 1000000
+    @turn.pile_cards
+      if @turn.type == :basic
+        puts "Turn #{@turn_count}: #{@turn.type} -
+        #{@turn.winner.name} has won 2 cards"
+        @turn.award_spoils(@turn.winner)
+      elsif @turn.type == :war
+        puts "Turn #{@turn_count}: #{@turn.type} -
+        #{@turn.winner.name} has won 6 cards"
+      else
+        puts "*#{@turn.type}* 6 cards removed from play"
+      end
       @turn_count += 1
     end
     outcome
   end
 
   def outcome
-    if @player1.has_lost?
-      "*~*~*~*#{@player1} has won the game!*~*~*~*"
-    elsif @player2.has_lost?
-      "*~*~*~*#{@player2} has won the game!*~*~*~*"
-    elsif @turn_count == 1000000
-      "---- DRAW ----"
+    if @turn_count >= 1000000
+      puts "---- DRAW ----"
+    elsif !@player1.has_lost?
+      puts "*~*~*~*#{@player1.name} has won the game!*~*~*~*"
+    elsif !@player2.has_lost?
+      puts "*~*~*~*#{@player2.name} has won the game!*~*~*~*"
     else
-      "Oops! Something went wrong :/"
+      puts "Oops! Something went wrong :/"
     end
   end
 
